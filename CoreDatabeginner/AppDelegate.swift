@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import CoreData
+import CoreData //CoreDataを使うのでインポートされてる
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
-    // MARK: - Core Data stack
+    // MARK: - Core Data stackしたからコアデータ
 
     lazy var persistentContainer: NSPersistentContainer = {
         /*
