@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         let managedContext = appDelegate.persistentContainer.viewContext
         if let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext),
            let name = nameTextField.text,
-           let age = ageTextField.text { //ageはintじゃないと落ちるようにしたい
+           let age = Int(ageTextField.text!) {
             let personObject = NSManagedObject(entity: entity, insertInto: managedContext)
             personObject.setValue(name, forKey: "name")
             personObject.setValue(NSInteger(age), forKey: "age")
