@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     // MARK: - Core Data stackしたからコアデータ
+    //とりあえずしたから順番にすればいい
 
     lazy var persistentContainer: NSPersistentContainer = {
         /*
