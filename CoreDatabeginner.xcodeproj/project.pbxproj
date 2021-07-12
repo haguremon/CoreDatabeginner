@@ -14,6 +14,7 @@
 		CF47357A2699A5AD003E1F14 /* CoreDatabeginner.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CF4735782699A5AD003E1F14 /* CoreDatabeginner.xcdatamodeld */; };
 		CF47357C2699A5AF003E1F14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF47357B2699A5AF003E1F14 /* Assets.xcassets */; };
 		CF47357F2699A5AF003E1F14 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF47357D2699A5AF003E1F14 /* LaunchScreen.storyboard */; };
+		CF7B578C269C3382004213FC /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7B578B269C3381004213FC /* InfoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		CF47357B2699A5AF003E1F14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CF47357E2699A5AF003E1F14 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF4735802699A5AF003E1F14 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF7B578B269C3381004213FC /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 				CF47356F2699A5AD003E1F14 /* AppDelegate.swift */,
 				CF4735712699A5AD003E1F14 /* SceneDelegate.swift */,
 				CF4735732699A5AD003E1F14 /* ViewController.swift */,
+				CF7B578B269C3381004213FC /* InfoViewController.swift */,
 				CF4735752699A5AD003E1F14 /* Main.storyboard */,
 				CF47357B2699A5AF003E1F14 /* Assets.xcassets */,
 				CF47357D2699A5AF003E1F14 /* LaunchScreen.storyboard */,
@@ -144,6 +147,7 @@
 				CF4735702699A5AD003E1F14 /* AppDelegate.swift in Sources */,
 				CF47357A2699A5AD003E1F14 /* CoreDatabeginner.xcdatamodeld in Sources */,
 				CF4735722699A5AD003E1F14 /* SceneDelegate.swift in Sources */,
+				CF7B578C269C3382004213FC /* InfoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
