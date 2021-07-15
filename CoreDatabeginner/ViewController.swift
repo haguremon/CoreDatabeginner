@@ -16,8 +16,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     //値を入れる配列を作る
     var age: [NSInteger] = []
-    var name: [NSString] = []
-    var email: [NSString] = []
+    var name: [String] = []
+    var email: [String] = []
     //var test = [["a","a",1],["a","a",2]]
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +34,11 @@ class ViewController: UIViewController {
     }
     //保存それぞれの配列に入れる
     @IBAction func createButton(_ sender: UIButton) {
+        if nameTextField.text!.isEmpty || emailTextField.text!.isEmpty {
+            dialogAlert(title: "未登録", message: "値を入力してください")
+            return
+        }
+        print("22\(nameTextField.text!)\n\(emailTextField.text!)'2'2")
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         //dialogAlert(title: "保存", message: "値を入力してください")
         guard let name = nameTextField.text,
@@ -42,32 +47,24 @@ class ViewController: UIViewController {
             dialogAlert(title: "未登録", message: "値を入力してください")
             return
         }
-//        guard self.email.contains(email as NSString) else {
-//            dialogAlert(title: "登録", message: "そのEmailで登録されています")
-//            return
-//        }
+       
         let managedContext = appDelegate.persistentContainer.viewContext
         
-        if let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext) {
-            let personObject = NSManagedObject(entity: entity, insertInto: managedContext)
-            if name.isEmpty || email.isEmpty {
-                dialogAlert(title: "保存", message: "値を入力してください")
-                return
-                
-            }
-            personObject.setValue(name, forKey: "name")
-            personObject.setValue(NSInteger(age), forKey: "age")
-            if self.email.contains(email as NSString){
+        guard let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext) else { return }
+            let personObject = NSManagedObject(entity: entity, insertInto: managedContext) as! Person
+            personObject.name = name
+            personObject.age = Int16(age)
+           personObject.email = email
+            //personObject.email = email
+            if self.email.contains(email as String){
                 self.dialogAlert(title: "保存", message: "そのemailは登録されています")
                 return
-            }else {
-                personObject.setValue(email, forKey: "email")
             }
-            print(email)
+        
+        print(email)
             print(self.email)
             
             
-        }
         if managedContext.hasChanges {
             do {
                 try managedContext.save()
@@ -84,9 +81,9 @@ class ViewController: UIViewController {
     @IBAction func readButton(_ sender: UIButton) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")//Pasonのテーブルから何か取得したいNSFetchRequest<ResultType>ジェネリック型
-        fetchRequest.propertiesToFetch = ["email"]
-        fetchRequest.returnsDistinctResults = true
+        
+        let fetchRequest = NSFetchRequest<Person>(entityName: "Person")
+        
         do {
             let myResults = try managedContext.fetch(fetchRequest)
             //fetch<T>(_ request: NSFetchRequest<T>)
@@ -103,11 +100,9 @@ class ViewController: UIViewController {
             //                return
             //            }
             for myData in myResults {
-                self.age.append(myData.value(forKey: "age") as! NSInteger)
-                self.name.append(myData.value(forKey: "name") as! NSString)
-                if fetchRequest.returnsDistinctResults {
-                    self.email.append(myData.value(forKey: "email") as? NSString ?? "")
-                }
+                self.age.append(NSInteger(myData.age) )
+                self.name.append(myData.email!)
+                self.email.append(myData.email!)
             }
             //nameTextField.text　と　emailTextField.textの内容がそれぞれの配列に入ってる時に遷移する
             
@@ -116,7 +111,9 @@ class ViewController: UIViewController {
                 age -> \(age.last!)
                 name ->\(name.last!)
                 email ->\(email.last!)
-                """
+
+
+"""
             )
             
             
@@ -125,7 +122,7 @@ class ViewController: UIViewController {
             print("取得に失敗しました\(nsError)")
         }
         //フィルター
-        if self.name.contains((nameTextField.text!) as NSString) && self.email.contains((emailTextField.text!) as NSString) &&
+        if self.name.contains(nameTextField.text!) && self.email.contains(emailTextField.text!) &&
             self.age.contains(Int(ageTextField.text!) ?? 0){
             dialogAlert(title: "取得", message: "取得に成功しました")
             
@@ -150,13 +147,13 @@ class ViewController: UIViewController {
     
     
     @IBAction func upDateButton(_ sender: UIButton) {
-        guard email.contains(emailTextField.text! as NSString) else {
+        guard email.contains(emailTextField.text!) else {
             dialogAlert(title: "Error", message: "Emailが登録されていません")
             return
         }
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")
+        let fetchRequest = NSFetchRequest<Person>(entityName: "Person")
         //これで検索↓
         let predicate = NSPredicate(format: "%K = %@", "email",emailTextField.text! as NSString)
         fetchRequest.predicate = predicate
@@ -167,13 +164,13 @@ class ViewController: UIViewController {
             let name = try managedContext.fetch(fetchRequest)
             for nameData in name {
                 
-                let data = nameData.value(forKey: "name") as! NSString
+                let data = nameData.name! as String
                 //var coreDataname = self.name
                 if self.name.contains(data){
                     self.name = self.name.filter({$0 != data})
                 }
             }
-            self.name.append(nameTextField.text! as NSString)
+            self.name.append(nameTextField.text!)
         } catch  {
             dialogAlert(title: "error", message: "\(error)")
         }
@@ -211,42 +208,36 @@ class ViewController: UIViewController {
     
     
     @IBAction func fullDeletionButton(_ sender: UIButton) {
-        
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-            let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")
+        self.age.removeAll()
+        self.name.removeAll()
+        self.email.removeAll()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        guard let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext) else { return }
+        let personObject = NSManagedObject(entity: entity, insertInto: managedContext) as! Person
+        managedContext.delete(personObject)
+        //fetchRequest.returnsObjectsAsFaults = false
+        do {
+            try managedContext.save()
+            self.dialogAlert(title: "全削除", message: "削除に成功しました")
 
-        fetchRequest.returnsObjectsAsFaults = false
-                do {
-                    let results = try managedContext.fetch(fetchRequest)
-                           for managedObject in results {
-                               if let managedObjectData: NSManagedObject = managedObject as? NSManagedObject {
-                                managedContext.delete(managedObjectData)
-                               }
-                    self.dialogAlert(title: "全削除", message: "削除に成功しました")
-                    self.age.removeAll()
-                    self.name.removeAll()
-                    self.email.removeAll()
-                    print("削除")
-                }
-                           } catch  {
-                    let nserror = error as NSError
-                    print("削除に失敗しました")
-                    print(nserror)
-                }
             
-            
+        } catch  {
+            let nserror = error as NSError
+            print("削除に失敗しました")
+            print(nserror)
         }
+        
+    }
     
     @IBAction func debugBtn(_ sender: UIButton) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Person")
-        
+
         print(
             """
             managedContext\(managedContext)
-            Person\(fetchRequest)
+            paspn \(Person.self)
             age \(self.age)
             name \(self.name)
             email\(self.email)
